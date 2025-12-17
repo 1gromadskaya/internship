@@ -1,0 +1,45 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: student_rooms
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+      - ./data:/data
+      - ./output:/output
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  python-app:
+    image: python:3.9-slim
+    volumes:
+      - ./src:/app/src
+      - ./sql:/app/sql
+      - ./data:/data
+      - ./output:/output
+      - ./requirements.txt:/app/requirements.txt
+    depends_on:
+      mysql:
+        condition: service_healthy
+    working_dir: /app
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: student_rooms
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    command: >
+      sh -c "pip install --no-cache-dir -r requirements.txt &&
+      sleep 10 &&
+      python src/main.py
+      --students /data/students.json
+      --rooms /data/rooms.json
+      --format json
+      --output /output/result
+      --sql-dir /app/sql"
