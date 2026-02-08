@@ -1,0 +1,7 @@
+services:
+  spark-app:
+    build: .
+    volumes:
+      - .:/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
