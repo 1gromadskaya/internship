@@ -82,7 +82,6 @@ with DAG(
                 df['content'] = df['content'].apply(clean_text)
 
             df.to_csv(OUTPUT_FILE, index=False)
-            print("Data processed and saved!")
 
         clean_nulls() >> sort_data() >> clean_content()
 
