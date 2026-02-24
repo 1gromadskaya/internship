@@ -1,8 +1,12 @@
+import logging
 from airflow import DAG
 from airflow.decorators import task
 from airflow.datasets import Dataset
 from airflow.utils.dates import days_ago
 import pandas as pd
+
+# Создаем объект логгера для нашего файла
+logger = logging.getLogger(__name__)
 
 INPUT_FILE = '/opt/airflow/data/cleaned_data.csv'
 cleaned_dataset = Dataset(f"file://{INPUT_FILE}")
@@ -24,22 +28,21 @@ with DAG(
         from pymongo import MongoClient
         import json
 
-        print("1. Чтение данных из файла...")
+        logger.info("1. Reading data from file...")
         df = pd.read_csv(INPUT_FILE)
         data_dict = json.loads(df.to_json(orient='records'))
 
-        print("2. Подключение к MongoDB напрямую...")
+        logger.info("2. Connecting directly to MongoDB...")
         client = MongoClient("mongodb://admin:password@mongo_db:27017/")
 
         db = client['analytics_db']
         collection = db['comments']
 
-        print("3. Загрузка данных в базу...")
+        logger.info("3. Loading data into the database...")
         if data_dict:
             collection.insert_many(data_dict)
-            print(f"Успешно загружено {len(data_dict)} записей!")
+            logger.info(f"Successfully loaded {len(data_dict)} records!")
         else:
-            print("Файл пуст, загружать нечего.")
-
+            logger.warning("The file is empty, nothing to load.")
 
     load_csv_to_mongo()
