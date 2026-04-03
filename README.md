@@ -1,4 +1,7 @@
-### Автоматизация в Airflow
-![1 DAG](Airflow_task/images/photo_2026-02-24_10-44-34.jpg)
-![2 DAG](Airflow_task/images/photo_2026-02-24_10-44-45.jpg)
-
+### Главный экран с кнопками-переключателями для быстрого сравнения продаж и прибыли по месяцам
+![1 page](PowerBI/images/1_page.jpg)
+![1.2 page](PowerBI/images/1.2_page.jpg)
+### Таблица с раскрывающимися списками товаров, которая показывает долю каждого продукта в общей выручке
+![2 page](PowerBI/images/2_page.jpg)
+### Анализ групп покупателей с настроенным доступом
+![3 page](PowerBI/images/3_page.jpg)
